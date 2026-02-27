@@ -44,8 +44,8 @@ class Serializer:
         """
         self._initialized = False
         if secret is not None:
-            self.secret = secret
-            self.master_key = hashlib.sha256(self.secret.encode()).hexdigest()  # for more entropy
+            self._secret = secret
+            self._master_key = hashlib.sha256(self._secret.encode()).digest()  # for more entropy
             self._initialized = True
 
     def initialize(self, secret: str):
@@ -57,8 +57,8 @@ class Serializer:
         """
         if self._initialized:
             raise errors.SerializerAlreadyInitialized()
-        self.secret = secret
-        self.master_key = hashlib.sha256(self.secret.encode()).hexdigest()  # for more entropy
+        self._secret = secret
+        self._master_key = hashlib.sha256(self._secret.encode()).digest()  # for more entropy
         self._initialized = True
 
     def check_initialization(self):
@@ -85,7 +85,7 @@ class Serializer:
         :return: key as bytes.
         """
         kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=200_000, backend=default_backend(), )
-        return kdf.derive(self.master_key.encode())
+        return kdf.derive(self._master_key)
 
     def encrypt(self, plaintext: bytes) -> bytes:
         """
@@ -127,7 +127,7 @@ class Serializer:
         :return: signature only as bytes.
         """
         self.check_initialization()
-        hm = hmac.new(self.secret.encode(), text, hashlib.sha224)
+        hm = hmac.new(self._secret.encode(), text, hashlib.sha224)
         return hm.digest()
 
     def hmac_verify(self, text: bytes, signature: bytes) -> bool:
