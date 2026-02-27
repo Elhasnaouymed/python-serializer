@@ -4,6 +4,8 @@ This is a Wrapper Python class that helps to serialize and deserialize Python da
 encrypting it with AES-GCM or signing it using HMAC.  
 This class also have two methods to hash passwords / verify them using bcrypt library.
 
+License: GPLv2
+
 ## Example
 
 You want to send email verification token to the user `#1` with email `user1@example.com`:
