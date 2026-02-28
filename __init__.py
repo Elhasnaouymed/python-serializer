@@ -32,8 +32,6 @@ __version__ = '0.0.1'
 __status__ = 'Development'
 __title__ = 'serializer'
 
-from .exceptions import SerializerTokenCorrupt
-
 
 class Serializer:
     def __init__(self, secret: str = None):
