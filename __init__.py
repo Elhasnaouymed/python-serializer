@@ -166,6 +166,8 @@ class Serializer:
         """
         self.check_initialization()
         ciphertext = base64.urlsafe_b64decode(token)  # extract the bytes value
+        if len(ciphertext) <= 2:  # count for possible decoding errors, like `{}` decodes to `b''`
+            raise errors.SerializerTokenCorrupt()
         method = chr(ciphertext[0])  # get the first letter that tells us which method was used (hmac or aes)
         ciphertext = ciphertext[1:]  # get the rest of the cipher (remove first letter)
         #
